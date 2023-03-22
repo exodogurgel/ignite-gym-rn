@@ -9,13 +9,24 @@ import backgroundImg from '@assets/background.png'
 import { Platform } from 'react-native'
 import { Input } from '@components/Input'
 import { Button } from '@components/Button'
+import { Controller, useForm } from 'react-hook-form'
+
+type FormData = {
+  email: string
+  password: string
+}
 
 export function SignIn() {
+  const { control, handleSubmit, formState: {errors} } = useForm<FormData>()
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
   function handleNewAccount() {
     navigation.navigate('signUp')
+  }
+
+  function handleSignIn({ email, password }: FormData){
+    console.log(email, password)
   }
 
   return (
@@ -44,18 +55,36 @@ export function SignIn() {
             Acesse sua conta
           </Heading>
 
-          <Input 
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          
-          <Input 
-            placeholder="Senha"
-            secureTextEntry
+          <Controller 
+            control={control}
+            name="email"
+            rules={{ required: 'Informe o e-mail' }}
+            render={({ field : { onChange }}) => (
+              <Input 
+                placeholder="E-mail"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                errorMessage={errors.email?.message}
+              />
+            )}
           />
 
-          <Button title="Acessar" />
+          <Controller 
+            control={control}
+            name="password"
+            rules={{ required: 'Informe a senha' }}
+            render={({ field: { onChange } }) => (
+              <Input 
+                placeholder="Senha" 
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.password?.message}
+              />
+            )}
+          />
+
+          <Button title="Acessar" onPress={handleSubmit(handleSignIn)}/>
         </Center>
 
         <Center mt={24}>
