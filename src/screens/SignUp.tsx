@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Center, Heading, Image, ScrollView, Text, useToast, VStack } from 'native-base'
 
 import { api } from '@services/axios'
+import { useAuth } from '@hooks/useAuth'
 import { AppError } from '@utils/AppError'
 
 import { useForm, Controller } from 'react-hook-form'
@@ -30,9 +32,13 @@ const signUpFormSchema = yup.object({
 })
 
 export function SignUp() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const {control, handleSubmit, formState: { errors }} = useForm<FormDataProps>({
     resolver: yupResolver(signUpFormSchema)
   })
+
+  const { signIn } = useAuth()
 
   const toast = useToast()
 
@@ -44,9 +50,14 @@ export function SignUp() {
 
   async function handleSignUp({name, email, password}: FormDataProps) {
     try {
-      const response = await api.post('/users', {name, email, password})
-      console.log(response.data)
+      setIsSubmitting(true)
+
+      await api.post('/users', {name, email, password})
+      await signIn(email, password)
+
     } catch (error) {
+      setIsSubmitting(false)
+
       const isAppError = error instanceof AppError
       const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde.'
     
@@ -145,6 +156,7 @@ export function SignUp() {
           <Button 
             title="Criar e acessar" 
             onPress={handleSubmit(handleSignUp)}
+            isLoading={isSubmitting}
           />
         </Center>
 
