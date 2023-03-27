@@ -1,7 +1,10 @@
 import { useNavigation } from '@react-navigation/native'
-import { Center, Heading, Image, ScrollView, Text, VStack } from 'native-base'
+import { Center, Heading, Image, ScrollView, Text, useToast, VStack } from 'native-base'
+
+import { Controller, useForm } from 'react-hook-form'
 
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import { useAuth } from '@hooks/useAuth'
 
 import LogoSvg from '@assets/logo.svg'
 import backgroundImg from '@assets/background.png'
@@ -9,7 +12,8 @@ import backgroundImg from '@assets/background.png'
 import { Platform } from 'react-native'
 import { Input } from '@components/Input'
 import { Button } from '@components/Button'
-import { Controller, useForm } from 'react-hook-form'
+import { AppError } from '@utils/AppError'
+import { useState } from 'react'
 
 type FormData = {
   email: string
@@ -17,16 +21,37 @@ type FormData = {
 }
 
 export function SignIn() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const { control, handleSubmit, formState: {errors} } = useForm<FormData>()
 
+  const toast = useToast()
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
+
+  const { signIn } = useAuth()
 
   function handleNewAccount() {
     navigation.navigate('signUp')
   }
 
-  function handleSignIn({ email, password }: FormData){
-    console.log(email, password)
+  async function handleSignIn({ email, password }: FormData){
+    try {
+      setIsSubmitting(true)
+      await signIn(email, password)
+
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível entrar. Tente novamente mais tarde.'
+      
+      setIsSubmitting(false)
+      
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500'
+      })
+
+    }
   }
 
   return (
@@ -84,7 +109,7 @@ export function SignIn() {
             )}
           />
 
-          <Button title="Acessar" onPress={handleSubmit(handleSignIn)}/>
+          <Button title="Acessar" onPress={handleSubmit(handleSignIn)} isLoading={isSubmitting}/>
         </Center>
 
         <Center mt={24}>
