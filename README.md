@@ -1,6 +1,6 @@
 # :iphone: App - Ignite Gym
 
-- Project developed in module 3 - Of **React Native** from **Ignite** from [Rocketseat][rocketseat_site].
+- Project developed in module 3 - Of **React Native** from **Ignite** from [Rocketseat](https://www.rocketseat.com.br/).
 
 ## :computer: About
 
@@ -72,14 +72,14 @@ $ expo start
 
 This project was developed with the following technologies:
 
-- [React Native][reactnative]
-- [Expo][expo]
-- [Expo File System][expo-file-system]
-- [TypeScript][typescript]
-- [Native Base][native-base]
-- [Axios][axios]
-- [React Hook Form][react-hook-form]
-- [Yup][yup]
+- [React Native](https://reactnative.dev)
+- [Expo](https://expo.dev)
+- [Expo File System](https://docs.expo.dev)
+- [TypeScript](https://www.typescriptlang.org)
+- [Native Base](https://nativebase.io)
+- [Axios](https://axios-http.com)
+- [React Hook Form](https://react-hook-form.com/)
+- [Yup](https://github.com/jquense/yup)
 
 
 ## 🦸 Author
