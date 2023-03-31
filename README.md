@@ -53,10 +53,10 @@ $ npm run dev
 ```bash
 
 # Clone this repository
-$ git clone https://github.com/exodogurgel/ignite-teams.git
+$ git clone https://github.com/exodogurgel/ignite-gym-rn.git
 
 # Access the project folder in your terminal
-$ cd ignite-teams-rn
+$ cd ignite-gym-rn
 
 # Install the dependencies
 $ npm install
